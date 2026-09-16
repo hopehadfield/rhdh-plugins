@@ -99,7 +99,7 @@ jobs:
           echo "version_branch_id=$VERSION_BRANCH_ID" >> "$GITHUB_OUTPUT"
 
   changesets-pr:
-    name: Update Version Packages PR for ${{ needs.check-merged-pr.outputs.workspace_name }} on branch ${{ github.ref }}
+    name: Update legacy Version Packages PR
     runs-on: ubuntu-latest
     needs: check-merged-pr
     if: needs.check-merged-pr.outputs.is_supported_branch == 'true' && needs.check-merged-pr.outputs.is_version_pr == 'false' && needs.check-merged-pr.outputs.is_repository_release == 'false' && needs.check-merged-pr.outputs.is_merged == 'true'
@@ -183,7 +183,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
 
   repository-release-workspaces:
-    name: Find workspaces changed in ${{ github.event.pull_request.base.ref }}
+    name: Find changed workspaces
     runs-on: ubuntu-latest
     needs: check-merged-pr
     if: needs.check-merged-pr.outputs.is_supported_branch == 'true' && needs.check-merged-pr.outputs.is_repository_release == 'true' && needs.check-merged-pr.outputs.is_version_pr == 'false' && needs.check-merged-pr.outputs.is_merged == 'true'
@@ -201,9 +201,10 @@ jobs:
         run: node scripts/ci/list-workspaces-with-changes.js
         env:
           COMMIT_SHA_BEFORE: ${{ github.event.pull_request.base.sha }}
+          EXCLUDE_NOOP: 'true'
 
   repository-changesets-pr:
-    name: Update Version Packages PR for ${{ matrix.workspace }} on ${{ github.event.pull_request.base.ref }}
+    name: Update repository-wide Version Packages PR
     runs-on: ubuntu-latest
     needs:
       - check-merged-pr
@@ -289,7 +290,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
 
   release:
-    name: Prior Version Release workspace ${{ needs.check-merged-pr.outputs.workspace_name }} on branch ${{ github.ref }}
+    name: Publish legacy workspace
     runs-on: ubuntu-latest
     needs: check-merged-pr
     if: needs.check-merged-pr.outputs.is_supported_branch == 'true' && needs.check-merged-pr.outputs.is_version_pr == 'true' && needs.check-merged-pr.outputs.is_repository_release == 'false'
@@ -344,7 +345,7 @@ jobs:
         run: echo "Tag creation is disabled in the safe fork test workflow"
 
   repository-release:
-    name: Release workspace ${{ needs.check-merged-pr.outputs.workspace_name }} on ${{ github.event.pull_request.base.ref }}
+    name: Publish repository-wide workspace
     runs-on: ubuntu-latest
     needs:
       - check-merged-pr

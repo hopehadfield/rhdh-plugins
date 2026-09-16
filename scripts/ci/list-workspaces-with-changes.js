@@ -60,6 +60,9 @@ async function main() {
   const packageList = diff.split('\n');
 
   const workspaces = new Set(['noop']);
+  if (process.env.EXCLUDE_NOOP === 'true') {
+    workspaces.delete('noop');
+  }
   for (const path of packageList) {
     const match = path.match(/^workspaces\/([^/]+)\//);
     if (match) {
