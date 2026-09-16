@@ -1,5 +1,11 @@
 # @red-hat-developer-hub/backstage-plugin-quickstart
 
+## 2.1.2
+
+### Patch Changes
+
+- 94ae7dc: Exercise the corrected repository-wide release workflow on a fork.
+
 ## 2.1.1
 
 ### Patch Changes
