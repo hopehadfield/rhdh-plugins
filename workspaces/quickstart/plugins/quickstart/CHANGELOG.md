@@ -1,5 +1,11 @@
 # @red-hat-developer-hub/backstage-plugin-quickstart
 
+## 2.1.3
+
+### Patch Changes
+
+- db2f289: Verify the legacy 1.10 per-plugin backport release flow.
+
 ## 2.1.2
 
 ### Patch Changes
