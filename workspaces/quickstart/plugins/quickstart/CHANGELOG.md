@@ -1,5 +1,11 @@
 # @red-hat-developer-hub/backstage-plugin-quickstart
 
+## 2.1.1
+
+### Patch Changes
+
+- 170a01e: Exercise the prior-version release workflow safely on a fork.
+
 ## 2.1.0
 
 ### Minor Changes
