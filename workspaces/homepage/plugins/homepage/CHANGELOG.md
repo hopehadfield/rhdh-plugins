@@ -1,5 +1,11 @@
 # @red-hat-developer-hub/backstage-plugin-homepage
 
+## 2.0.1
+
+### Patch Changes
+
+- 6812ed6: Exercise repository-wide release processing for the homepage workspace.
+
 ## 2.0.0
 
 ### Major Changes
