@@ -1,5 +1,7 @@
-name: Prior Version Release Workspace
+name: Prior Version Release Workspace (Safe Fork Test)
 
+# TEST ONLY: this variant uses the fork's GitHub token, performs npm dry runs,
+# and never creates Git tags. Do not merge this test variant into main.
 on:
   pull_request:
     types:
@@ -7,6 +9,10 @@ on:
     branches:
       - 'release-1.*/*'
       - 'release-*.*'
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   check-merged-pr:
@@ -37,7 +43,7 @@ jobs:
 
           is_version_pr=false
           if [[ "$PR_TITLE" == "Version Packages"* \
-            && "$USER_LOGIN" == "rhdh-bot" \
+            && ( "$USER_LOGIN" == "rhdh-bot" || "$USER_LOGIN" == "github-actions[bot]" ) \
             && "$PR_MERGED" == "true" ]]; then
             if [[ "$BASE_REF" =~ ^release-[0-9]+\.[0-9]+$ ]]; then
               if [[ "$HEAD_REF" =~ ^maintenance-changesets-release/${BASE_REF}/[^/]+$ ]]; then
@@ -174,7 +180,7 @@ jobs:
           versionBranch: maintenance-changesets-release/${{ needs.check-merged-pr.outputs.version_branch_id }}
           skipRootChangelogUpdate: true
         env:
-          GITHUB_TOKEN: ${{ secrets.RHDH_BOT_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
 
   repository-release-workspaces:
     name: Find workspaces changed in ${{ github.event.pull_request.base.ref }}
@@ -280,7 +286,7 @@ jobs:
           versionBranch: maintenance-changesets-release/${{ github.event.pull_request.base.ref }}/${{ matrix.workspace }}
           skipRootChangelogUpdate: true
         env:
-          GITHUB_TOKEN: ${{ secrets.RHDH_BOT_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
 
   release:
     name: Prior Version Release workspace ${{ needs.check-merged-pr.outputs.workspace_name }} on branch ${{ github.ref }}
@@ -331,19 +337,11 @@ jobs:
       - name: Build all packages
         run: yarn build:all
 
-      - name: publish
-        run: |
-          yarn config set -H 'npmAuthToken' "$NODE_AUTH_TOKEN"
-          yarn workspaces foreach -A -v --no-private npm publish --access public --tolerate-republish --tag "maintenance"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.RHDH_NPM_TOKEN }}
+      - name: Publish dry run
+        run: yarn workspaces foreach -A -v --no-private npm publish --access public --tolerate-republish --tag "maintenance" --dry-run
 
-      - name: Create tag
-        working-directory: ${{ github.workspace }}/scripts/ci
-        run: node create-tag.js
-        env:
-          WORKSPACE_NAME: ${{ needs.check-merged-pr.outputs.workspace_name }}
-          GITHUB_TOKEN: ${{ secrets.RHDH_BOT_TOKEN }}
+      - name: Skip tag creation
+        run: echo "Tag creation is disabled in the safe fork test workflow"
 
   repository-release:
     name: Release workspace ${{ needs.check-merged-pr.outputs.workspace_name }} on ${{ github.event.pull_request.base.ref }}
@@ -398,16 +396,8 @@ jobs:
       - name: Build all packages
         run: yarn build:all
 
-      - name: publish
-        run: |
-          yarn config set -H 'npmAuthToken' "$NODE_AUTH_TOKEN"
-          yarn workspaces foreach -A -v --no-private npm publish --access public --tolerate-republish --tag "maintenance"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.RHDH_NPM_TOKEN }}
+      - name: Publish dry run
+        run: yarn workspaces foreach -A -v --no-private npm publish --access public --tolerate-republish --tag "maintenance" --dry-run
 
-      - name: Create tag
-        working-directory: ${{ github.workspace }}/scripts/ci
-        run: node create-tag.js
-        env:
-          WORKSPACE_NAME: ${{ needs.check-merged-pr.outputs.workspace_name }}
-          GITHUB_TOKEN: ${{ secrets.RHDH_BOT_TOKEN }}
+      - name: Skip tag creation
+        run: echo "Tag creation is disabled in the safe fork test workflow"
