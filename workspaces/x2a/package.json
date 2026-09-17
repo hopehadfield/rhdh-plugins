@@ -99,5 +99,10 @@
     "@mareklibra",
     "@eloycoto",
     "@yray-pixel"
-  ]
+  ],
+  "dependenciesMeta": {
+    "better-sqlite3": {
+      "built": true
+    }
+  }
 }

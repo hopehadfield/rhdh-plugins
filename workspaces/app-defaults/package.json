@@ -58,5 +58,10 @@
     "@backstage/plugin-catalog-react": "3.2.2",
     "refractor@npm:3.6.0/prismjs": "^1.30.0"
   },
-  "prettier": "@backstage/cli/config/prettier"
+  "prettier": "@backstage/cli/config/prettier",
+  "dependenciesMeta": {
+    "better-sqlite3": {
+      "built": true
+    }
+  }
 }

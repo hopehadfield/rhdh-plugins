@@ -81,5 +81,10 @@
   },
   "dependencies": {
     "enquirer": "^2.4.1"
+  },
+  "dependenciesMeta": {
+    "better-sqlite3": {
+      "built": true
+    }
   }
 }
