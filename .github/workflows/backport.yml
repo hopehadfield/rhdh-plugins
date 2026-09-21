@@ -56,7 +56,7 @@ jobs:
 
   backport:
     name: Backport merged pull request
-    if: github.event.pull_request.merged == true && github.repository == 'redhat-developer/rhdh-plugins'
+    if: github.event.pull_request.merged == true && github.repository == 'hopehadfield/rhdh-plugins'
     permissions:
       contents: write
       pull-requests: write
